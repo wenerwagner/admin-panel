@@ -1,2 +1,5 @@
 # JetBrains IDE config
 .idea
+
+# Local files
+.local
