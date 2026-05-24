@@ -32,12 +32,12 @@ Delivered so far:
 - Vite React web scaffold with placeholder login and students pages
 - Docker Compose stack with PostgreSQL, API, Caddy-served web app, and a persistent PostgreSQL volume
 - Validated API environment configuration
+- Prisma schema and initial migration for admins, sessions, and students
 
 Not delivered yet:
 
 - Admin login
 - Student CRUD
-- Prisma schema and migrations
 - Admin seed or credentials
 
 The main AI tool used for implementation work is Codex.

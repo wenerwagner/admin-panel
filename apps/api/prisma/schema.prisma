@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model AdminUser {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  sessions     Session[]
+
+  @@map("admin_users")
+}
+
+model Session {
+  id          String    @id @default(uuid()) @db.Uuid
+  adminUserId String    @map("admin_user_id") @db.Uuid
+  tokenHash   String    @unique @map("token_hash")
+  expiresAt   DateTime  @map("expires_at")
+  revokedAt   DateTime? @map("revoked_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model Student {
+  id             String         @id @default(uuid()) @db.Uuid
+  name           String
+  email          String
+  cpf            String
+  phone          String
+  subscribedPlan SubscribedPlan @map("subscribed_plan")
+  status         StudentStatus
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  deletedAt      DateTime?      @map("deleted_at")
+
+  @@index([status])
+  @@index([subscribedPlan])
+  @@index([deletedAt])
+  @@map("students")
+}
+
+enum SubscribedPlan {
+  BASIC
+  PREMIUM
+
+  @@map("subscribed_plan")
+}
+
+enum StudentStatus {
+  ACTIVE
+  PAUSED
+  CANCELED
+
+  @@map("student_status")
+}
