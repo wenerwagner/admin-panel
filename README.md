@@ -35,6 +35,17 @@ npm test --workspace apps/api
 The API test harness uses the local PostgreSQL database with a dedicated `test` schema by default. Set
 `TEST_DATABASE_URL` to point tests at a different disposable PostgreSQL database.
 
+## Local Admin User
+
+Create the first admin intentionally after PostgreSQL is running:
+
+```sh
+npm run admin:create --workspace apps/api -- --email admin@example.com --password local-admin-password --name "Local Admin"
+```
+
+`npm run seed --workspace apps/api` runs the same command and can read `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and
+`ADMIN_NAME` from the environment. Existing admin emails fail explicitly and do not overwrite the stored password.
+
 ## Current Scope
 
 Delivered so far:
@@ -48,11 +59,11 @@ Delivered so far:
 - Backend error handling foundation with typed API errors and centralized middleware
 - Structured backend request logging with request IDs
 - PostgreSQL-backed API test harness with Supertest and Vitest
+- Admin password hashing and create/seed command
 
 Not delivered yet:
 
 - Admin login
 - Student CRUD
-- Admin seed or credentials
 
 The main AI tool used for implementation work is Codex.
