@@ -1,6 +1,7 @@
 import type { Prisma, PrismaClient, Student } from "@prisma/client";
 
 import { prisma } from "../lib/prisma.js";
+import { digitsOnly } from "../utils/cpf.js";
 
 export type StudentListFilters = {
   q?: string;
@@ -85,6 +86,8 @@ export class StudentRepository {
 }
 
 function activeStudentWhere(filters: StudentListFilters): Prisma.StudentWhereInput {
+  const searchDigits = filters.q ? digitsOnly(filters.q) : undefined;
+
   return {
     deletedAt: null,
     status: filters.status,
@@ -103,6 +106,20 @@ function activeStudentWhere(filters: StudentListFilters): Prisma.StudentWhereInp
               mode: "insensitive",
             },
           },
+          ...(searchDigits
+            ? [
+                {
+                  cpf: {
+                    contains: searchDigits,
+                  },
+                },
+                {
+                  phone: {
+                    contains: searchDigits,
+                  },
+                },
+              ]
+            : []),
         ]
       : undefined,
   };

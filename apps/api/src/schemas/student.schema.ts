@@ -57,9 +57,14 @@ export const studentListQuerySchema = z.object({
   pageSize: z.coerce.number().int().positive().max(100).default(20),
 });
 
+export const studentIdParamsSchema = z.object({
+  studentId: z.uuid(),
+});
+
 export type CreateStudentInput = z.infer<typeof createStudentSchema>;
 export type UpdateStudentInput = z.infer<typeof updateStudentSchema>;
 export type StudentListQueryInput = z.infer<typeof studentListQuerySchema>;
+export type StudentIdParamsInput = z.infer<typeof studentIdParamsSchema>;
 
 function emptyToUndefined(value: string | undefined): string | undefined {
   return value && value.length > 0 ? value : undefined;
