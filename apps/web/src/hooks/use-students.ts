@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { createStudent, getStudent, listStudents, updateStudent } from "../api/student-api.js";
+import { createStudent, deleteStudent, getStudent, listStudents, updateStudent } from "../api/student-api.js";
 import type { CreateStudentRequest, StudentListQuery, UpdateStudentRequest } from "../types/api.js";
 
 const studentListQueryKey = ["students"] as const;
@@ -58,6 +58,26 @@ export function useUpdateStudent(studentId: string, csrfToken: string | null) {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: studentListQueryKey }),
         queryClient.invalidateQueries({ queryKey: studentDetailQueryKey(studentId) }),
+      ]);
+    },
+  });
+}
+
+export function useDeleteStudent(csrfToken: string | null) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (studentId: string) => {
+      if (!csrfToken) {
+        throw new Error("Missing CSRF token");
+      }
+
+      return deleteStudent(studentId, csrfToken);
+    },
+    onSuccess: async (_result, studentId) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: studentListQueryKey }),
+        queryClient.removeQueries({ queryKey: studentDetailQueryKey(studentId) }),
       ]);
     },
   });

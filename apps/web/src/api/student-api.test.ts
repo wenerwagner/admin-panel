@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { listStudents } from "./student-api.js";
+import { deleteStudent, listStudents } from "./student-api.js";
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -45,5 +45,22 @@ describe("student API", () => {
         signal: undefined,
       },
     );
+  });
+
+  it("sends delete requests with CSRF token", async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(new Response(null, { status: 204 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await deleteStudent("student-id", "csrf-token");
+
+    expect(fetchMock).toHaveBeenCalledWith("/api/students/student-id", {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "X-CSRF-Token": "csrf-token",
+      },
+      body: undefined,
+      signal: undefined,
+    });
   });
 });
