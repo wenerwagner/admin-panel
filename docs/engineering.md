@@ -140,6 +140,17 @@ categories are:
 * reset or seed local development data
 * create or seed an admin user
 
+Implemented API scaffold commands:
+
+```sh
+npm run build --workspace apps/api
+npm run typecheck --workspace apps/api
+npm run dev --workspace apps/api
+```
+
+`npm run dev --workspace apps/api` starts the Express API on port `3000` by default. Set `PORT` to use a different
+local port.
+
 The README should contain the shortest setup path for a clean checkout. This document should contain the broader
 engineering workflow and command reference.
 
