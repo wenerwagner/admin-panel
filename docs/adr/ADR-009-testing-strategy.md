@@ -102,7 +102,7 @@ Frontend component tests are optional in v1. The project does not require high f
 or broad React component testing. If frontend tests are added, they should be limited to cheap smoke tests or focused
 tests around API error mapping.
 
-End-to-end browser tests are not required in v1. A manual happy-path checklist in the README or operations docs is
+End-to-end browser tests are not required in v1. A manual happy-path checklist in the README or engineering docs is
 sufficient for v1 UI verification.
 
 ## Consequences

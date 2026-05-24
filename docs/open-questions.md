@@ -42,7 +42,7 @@ description: The questions should have context, dates, owners, statuses
 * **Owner:** Technical owner
 * **Recommendation:** Do not create a dedicated ADR now. Prisma, migrations, seed/admin creation constraints, and
   partial unique index concerns are already covered by ADR-001, ADR-002, and ADR-003. Document exact migration, seed,
-  and test database reset commands in `docs/engineering.md` or `docs/operations.md` after scaffolding.
+  and test database reset commands in `docs/engineering.md` after scaffolding.
 
 ## Frontend UI and Component Library
 
@@ -59,8 +59,8 @@ description: The questions should have context, dates, owners, statuses
 * **Date:** 2026-05-24
 * **Owner:** Technical/operator owner
 * **Recommendation:** Keep environment variable examples, `.env.example`, local defaults, production secret generation,
-  and Docker Compose wiring in engineering/operations docs for now. ADR-002 already defines the main backend
-  environment variables.
+  and Docker Compose wiring in `docs/engineering.md` for now. ADR-002 already defines the main backend environment
+  variables.
 
 ## Admin Creation CLI
 
@@ -68,7 +68,7 @@ description: The questions should have context, dates, owners, statuses
 * **Date:** 2026-05-24
 * **Owner:** Technical owner
 * **Recommendation:** Keep the exact CLI command, arguments, password prompt behavior, and local seed credentials in
-  `README.md` and `docs/operations.md` once implemented. ADR-002 already defines the architectural rule: no public
+  `README.md` and `docs/engineering.md` once implemented. ADR-002 already defines the architectural rule: no public
   registration, no automatic production default admin, and explicit production admin creation.
 
 # Previously Answered Questions
