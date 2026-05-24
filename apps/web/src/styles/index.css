@@ -24,6 +24,14 @@ select {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 .app-shell {
   width: min(100% - 32px, 1120px);
   min-height: 100vh;
@@ -42,6 +50,18 @@ select {
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 32px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-meta {
+  margin: 10px 0 0;
+  color: #5f6b3f;
+  font-size: 0.95rem;
 }
 
 .eyebrow {
@@ -75,6 +95,7 @@ p {
   line-height: 1.6;
 }
 
+.auth-panel,
 .placeholder-panel {
   max-width: 620px;
   border: 1px solid #d8dee6;
@@ -82,4 +103,123 @@ p {
   background: #ffffff;
   padding: 28px;
   box-shadow: 0 12px 30px rgb(29 39 51 / 8%);
+}
+
+.auth-panel {
+  width: min(100%, 420px);
+}
+
+.status-panel {
+  width: min(100%, 360px);
+  border: 1px solid #d8dee6;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 24px;
+  text-align: center;
+}
+
+.status-panel p {
+  margin: 0;
+}
+
+.form-stack {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  color: #25313f;
+  font-weight: 700;
+}
+
+.field input {
+  width: 100%;
+  border: 1px solid #b9c4cf;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1d2733;
+  padding: 11px 12px;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: #256b5f;
+  box-shadow: 0 0 0 3px rgb(37 107 95 / 16%);
+}
+
+.field input[aria-invalid="true"] {
+  border-color: #a33a36;
+}
+
+.field-error,
+.form-error,
+.inline-error {
+  color: #a33a36;
+}
+
+.field-error {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.form-error {
+  margin: 0;
+  border: 1px solid #efc5c3;
+  border-radius: 6px;
+  background: #fff5f4;
+  padding: 10px 12px;
+}
+
+.inline-error {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 42px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.primary-button {
+  border: 1px solid #256b5f;
+  background: #256b5f;
+  color: #ffffff;
+  padding: 0 18px;
+}
+
+.primary-button:disabled {
+  opacity: 0.72;
+}
+
+.secondary-button {
+  border: 1px solid #b9c4cf;
+  background: #ffffff;
+  color: #1d2733;
+  padding: 0 14px;
+}
+
+.secondary-button:disabled {
+  color: #667381;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: min(100% - 24px, 1120px);
+    padding: 28px 0;
+  }
+
+  .page-header,
+  .header-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+  }
 }
