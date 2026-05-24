@@ -4,10 +4,21 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "echo \"Web build is not implemented yet\"",
-    "dev": "echo \"Web dev server is not implemented yet\"",
+    "build": "tsc -p tsconfig.json && vite build",
+    "dev": "vite --host 0.0.0.0",
     "lint": "echo \"Web lint is not implemented yet\"",
     "test": "echo \"Web tests are not implemented yet\"",
-    "typecheck": "echo \"Web typecheck is not implemented yet\""
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "vite": "^8.0.14",
+    "typescript": "^6.0.3"
   }
 }
