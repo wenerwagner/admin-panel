@@ -33,6 +33,7 @@ Delivered so far:
 - Docker Compose stack with PostgreSQL, API, Caddy-served web app, and a persistent PostgreSQL volume
 - Validated API environment configuration
 - Prisma schema and initial migration for admins, sessions, and students
+- Backend error handling foundation with typed API errors and centralized middleware
 
 Not delivered yet:
 
