@@ -5,6 +5,7 @@ import { configureTestEnv } from "./test-env.js";
 configureTestEnv();
 
 const { prisma } = await import("../src/lib/prisma.js");
+const { resetLoginRateLimitStore } = await import("../src/middleware/rate-limit.middleware.js");
 
 export const testPrisma = prisma;
 
@@ -19,6 +20,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  resetLoginRateLimitStore();
   await resetDatabase();
 });
 

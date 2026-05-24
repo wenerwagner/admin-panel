@@ -1,5 +1,6 @@
 import express from "express";
 
+import { parseEnv } from "./config/env.js";
 import { errorMiddleware, NotFoundError } from "./errors/index.js";
 import { logger as defaultLogger, type AppLogger } from "./lib/logger.js";
 import { requestIdMiddleware } from "./lib/request-id.js";
@@ -7,9 +8,11 @@ import { requestLoggingMiddleware } from "./middleware/request-logging.middlewar
 import { apiRoutes } from "./routes/index.js";
 
 export function createApp({ logger = defaultLogger }: { logger?: AppLogger } = {}) {
+  const env = parseEnv(process.env);
   const app = express();
 
   app.disable("x-powered-by");
+  app.set("trust proxy", env.trustProxy);
   app.use(requestIdMiddleware);
   app.use(requestLoggingMiddleware(logger));
   app.use(express.json());
