@@ -225,10 +225,12 @@ describe("auth endpoints", () => {
       })
       .expect(200);
     const sessionCookie = sessionCookieFrom(loginResponse);
+    const meResponse = await request(app).get("/api/auth/me").set("Cookie", sessionCookie).expect(200);
 
     const logoutResponse = await request(app)
       .post("/api/auth/logout")
       .set("Cookie", sessionCookie)
+      .set("X-CSRF-Token", meResponse.body.csrfToken as string)
       .expect(204);
 
     expect(logoutResponse.header["set-cookie"]?.[0]).toContain("Max-Age=0");

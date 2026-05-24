@@ -1,8 +1,9 @@
-import { createHash, createHmac, randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 
 import { parseEnv, type Env } from "../config/env.js";
 import { AuthenticationRequiredError, InvalidCredentialsError } from "../errors/index.js";
 import { verifyPassword } from "../lib/argon2.js";
+import { createCsrfToken } from "../lib/csrf.js";
 import {
   AdminUserRepository,
   toAdminSummary,
@@ -84,7 +85,7 @@ export class AuthService {
   }
 
   csrfTokenFor(session: AuthSession): string {
-    return createHmac("sha256", this.env.csrfSecret).update(session.tokenHash).digest("base64url");
+    return createCsrfToken(session.tokenHash, this.env.csrfSecret);
   }
 }
 
