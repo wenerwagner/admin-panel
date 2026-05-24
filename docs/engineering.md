@@ -6,8 +6,8 @@ This document defines the development process for this repository. The project i
 should show clear engineering discipline without adding unnecessary ceremony.
 
 Architectural decisions belong in ADRs. Unresolved or intentionally deferred decisions belong in
-[open questions](open-questions.md). Concrete implementation tasks should be tracked in GitHub Issues once the project
-repository is active there.
+[open questions](open-questions.md). Concrete implementation tasks are tracked in
+[GitHub Issues](https://github.com/wenerwagner/admin-panel/issues).
 
 ## Repository Workflow
 
@@ -75,11 +75,10 @@ Conventional Commit prefixes such as `docs:` or `fix:` are allowed but not requi
 
 ## Work Tracking
 
-GitHub Issues is the preferred long-term tracker for implementation work.
+GitHub Issues is the active tracker for implementation work.
 
-The local `issues/` directory may be used as a temporary planning aid while the repository is being prepared. It should
-not be treated as a permanent replacement for GitHub Issues. If local issue drafts are kept, they should stay small,
-verifiable, and aligned with the issue template until they are migrated.
+The local `issues/` directory was removed after its drafts were migrated. New implementation work should be opened in
+GitHub Issues, not added as local issue draft files.
 
 ## Deferred Decisions
 
