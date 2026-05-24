@@ -23,6 +23,18 @@ Optional local defaults are documented in [.env.example](.env.example). The stac
 The API validates environment variables before startup. For production-like runs, provide explicit values for
 `DATABASE_URL`, `CSRF_SECRET`, session settings, CORS origins, proxy trust, and log level.
 
+## Backend Tests
+
+Start PostgreSQL, then run the API test suite:
+
+```sh
+docker compose up postgres
+npm test --workspace apps/api
+```
+
+The API test harness uses the local PostgreSQL database with a dedicated `test` schema by default. Set
+`TEST_DATABASE_URL` to point tests at a different disposable PostgreSQL database.
+
 ## Current Scope
 
 Delivered so far:
@@ -35,6 +47,7 @@ Delivered so far:
 - Prisma schema and initial migration for admins, sessions, and students
 - Backend error handling foundation with typed API errors and centralized middleware
 - Structured backend request logging with request IDs
+- PostgreSQL-backed API test harness with Supertest and Vitest
 
 Not delivered yet:
 
