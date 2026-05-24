@@ -31,6 +31,34 @@ exposure rules that directly affect response shapes.
 The API design needs to be explicit before implementation so frontend behavior, validation, tests, and backend routes
 can be built consistently.
 
+## Considered Options
+
+Chosen options: **Private REST API without URL versioning**, **Direct single-resource responses with collection envelopes**, and **Page/pageSize pagination**.
+
+1. **Private REST API without URL versioning** *(chosen)*
+   * *Pros:* Keeps routes simple and matches the same-repo, same-deployment frontend/backend model.
+   * *Cons:* Would need a later migration if the API becomes externally consumed.
+
+2. **URL versioned API from v1**
+   * *Pros:* Makes future compatibility boundaries visible immediately.
+   * *Cons:* Adds noise before there is a public or independently versioned API contract.
+
+3. **Direct single-resource responses with collection envelopes** *(chosen)*
+   * *Pros:* Keeps simple responses simple while supporting pagination metadata.
+   * *Cons:* Response shape differs between single-resource and collection endpoints.
+
+4. **Universal response envelope**
+   * *Pros:* Uniform response shape across all endpoints.
+   * *Cons:* Adds ceremony without meaningful benefit for this small internal API.
+
+5. **Page/pageSize pagination** *(chosen)*
+   * *Pros:* Simple for admin tables, easy to test, and aligns with the expected backoffice dataset size.
+   * *Cons:* May need replacement if the dataset becomes large or frequently changes while admins are paging.
+
+6. **Cursor pagination**
+   * *Pros:* Better for large or frequently changing datasets.
+   * *Cons:* Unnecessary complexity for the current backoffice use case.
+
 ## Decision
 
 The API will use resource-oriented REST endpoints under the `/api` prefix.
@@ -289,28 +317,6 @@ Required API integration tests will use Vitest and Supertest. The minimum covera
 * list masking PII
 * detail returning full PII
 * soft delete exclusion from list/detail/update
-
-## Considered Options
-
-1. **Private REST API without URL versioning**
-   * *Pros:* Keeps routes simple and matches the same-repo, same-deployment frontend/backend model.
-   * *Cons:* Would need a later migration if the API becomes externally consumed.
-
-2. **URL versioned API from v1**
-   * *Pros:* Makes future compatibility boundaries visible immediately.
-   * *Cons:* Adds noise before there is a public or independently versioned API contract.
-
-3. **Direct single-resource responses with collection envelopes**
-   * *Pros:* Keeps simple responses simple while supporting pagination metadata.
-   * *Cons:* Response shape differs between single-resource and collection endpoints.
-
-4. **Universal response envelope**
-   * *Pros:* Uniform response shape across all endpoints.
-   * *Cons:* Adds ceremony without meaningful benefit for this small internal API.
-
-5. **Cursor pagination**
-   * *Pros:* Better for large or frequently changing datasets.
-   * *Cons:* Unnecessary complexity for the current backoffice use case.
 
 ## Consequences
 

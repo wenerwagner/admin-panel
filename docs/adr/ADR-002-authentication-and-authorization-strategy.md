@@ -32,6 +32,34 @@ proxying `/api` requests to the backend.
 Authentication and authorization must be simple enough for the first version, but strong enough to protect student PII
 and make API behavior testable before implementation starts.
 
+## Considered Options
+
+Chosen option: **PostgreSQL-backed opaque sessions in HTTP-only cookies**.
+
+1. **PostgreSQL-backed opaque sessions in HTTP-only cookies** *(chosen)*
+   * *Pros:* Fits the same-origin SPA/API deployment, keeps session tokens out of frontend JavaScript, supports logout
+     and revocation, and is straightforward to test.
+   * *Cons:* Requires a sessions table and database lookup for authenticated requests.
+
+2. **JWT access/refresh tokens stored by the frontend**
+   * *Pros:* Common for APIs consumed by multiple clients and can reduce server-side session state.
+   * *Cons:* Browser storage increases token exposure risk, and revocation/logout become more complex than needed for
+     this internal panel.
+
+3. **Stateless JWT in an HTTP-only cookie**
+   * *Pros:* Keeps tokens away from frontend JavaScript and avoids session lookup.
+   * *Cons:* Logout and revocation are weak unless server-side state is added, which removes the main simplicity
+     benefit.
+
+4. **External identity provider**
+   * *Pros:* Can provide stronger organization-level identity management.
+   * *Cons:* Adds operational and configuration complexity before there is a confirmed organization identity provider
+     requirement.
+
+5. **RBAC in v1**
+   * *Pros:* Prepares for multiple admin permission levels.
+   * *Cons:* Adds design and testing surface without a current product requirement for more than one admin capability.
+
 ## Decision
 
 Admin users will be stored in the application database. There will be no public registration endpoint in v1.
@@ -135,32 +163,6 @@ SESSION_TTL_HOURS=8
 TRUST_PROXY=false locally, true only behind a configured reverse proxy
 LOG_LEVEL=info
 ```
-
-## Considered Options
-
-1. **PostgreSQL-backed opaque sessions in HTTP-only cookies**
-   * *Pros:* Fits the same-origin SPA/API deployment, keeps session tokens out of frontend JavaScript, supports logout
-     and revocation, and is straightforward to test.
-   * *Cons:* Requires a sessions table and database lookup for authenticated requests.
-
-2. **JWT access/refresh tokens stored by the frontend**
-   * *Pros:* Common for APIs consumed by multiple clients and can reduce server-side session state.
-   * *Cons:* Browser storage increases token exposure risk, and revocation/logout become more complex than needed for
-     this internal panel.
-
-3. **Stateless JWT in an HTTP-only cookie**
-   * *Pros:* Keeps tokens away from frontend JavaScript and avoids session lookup.
-   * *Cons:* Logout and revocation are weak unless server-side state is added, which removes the main simplicity
-     benefit.
-
-4. **External identity provider**
-   * *Pros:* Can provide stronger organization-level identity management.
-   * *Cons:* Adds operational and configuration complexity before there is a confirmed organization identity provider
-     requirement.
-
-5. **RBAC in v1**
-   * *Pros:* Prepares for multiple admin permission levels.
-   * *Cons:* Adds design and testing surface without a current product requirement for more than one admin capability.
 
 ## Consequences
 

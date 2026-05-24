@@ -37,6 +37,30 @@ business rules beyond storing and maintaining student data securely.
 ADR-001 selected PostgreSQL and Prisma. ADR-002 defines active admins as the only users allowed to access student
 management features. ADR-005 defines privacy constraints for PII fields.
 
+## Considered Options
+
+Chosen options: **Required fields for all minimum product data** and **Soft delete with `deletedAt`**.
+
+1. **Required fields for all minimum product data** *(chosen)*
+   * *Pros:* Avoids ambiguous incomplete records and matches the product requirements.
+   * *Cons:* Admins cannot create placeholder students without complete data.
+
+2. **Optional contact fields**
+   * *Pros:* More flexible during data entry.
+   * *Cons:* Weakens the defined minimum record and complicates validation and UI behavior.
+
+3. **Soft delete with `deletedAt`** *(chosen)*
+   * *Pros:* Reduces accidental irreversible data loss and preserves room for future retention/anonymization policy.
+   * *Cons:* Keeps PII in the database until a retention or purge policy is implemented.
+
+4. **Hard delete**
+   * *Pros:* Removes active database rows immediately.
+   * *Cons:* Can conflict with recovery, school record retention, and future compliance review.
+
+5. **Free-text plan and status**
+   * *Pros:* Flexible.
+   * *Cons:* Makes validation, filtering, and UI controls less reliable.
+
 ## Decision
 
 The first version will use three core entities:
@@ -246,28 +270,6 @@ enum StudentStatus {
   CANCELED
 }
 ```
-
-## Considered Options
-
-1. **Required fields for all minimum product data**
-   * *Pros:* Avoids ambiguous incomplete records and matches the product requirements.
-   * *Cons:* Admins cannot create placeholder students without complete data.
-
-2. **Optional contact fields**
-   * *Pros:* More flexible during data entry.
-   * *Cons:* Weakens the defined minimum record and complicates validation and UI behavior.
-
-3. **Soft delete with `deletedAt`**
-   * *Pros:* Reduces accidental irreversible data loss and preserves room for future retention/anonymization policy.
-   * *Cons:* Keeps PII in the database until a retention or purge policy is implemented.
-
-4. **Hard delete**
-   * *Pros:* Removes active database rows immediately.
-   * *Cons:* Can conflict with recovery, school record retention, and future compliance review.
-
-5. **Free-text plan and status**
-   * *Pros:* Flexible.
-   * *Cons:* Makes validation, filtering, and UI controls less reliable.
 
 ## Consequences
 

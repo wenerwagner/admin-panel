@@ -34,6 +34,30 @@ Student records include sensitive personal data, so security and privacy require
 Specific authentication, authorization, validation, testing, and PII-handling decisions are outside the scope of this
 ADR and will be addressed separately.
 
+## Considered Options
+
+Chosen option: **Simple containerized three-layer application**.
+
+1. **Simple containerized three-layer application** *(chosen)*
+   * *Pros:* Simple to understand, aligns with the existing constraints, supports one-command setup, and keeps the UI,
+     API, and persistence responsibilities clear.
+   * *Cons:* The initial deployment model is limited to a single host and does not provide high availability by itself.
+
+2. **Single full-stack framework application**
+   * *Pros:* Could reduce the number of runtime applications and consolidate routing, rendering, and API behavior.
+   * *Cons:* Does not match the desired explicit separation between frontend and backend concerns, and is unnecessary
+     for a small internal CRUD panel with a REST API.
+
+3. **Microservices or event-driven architecture**
+   * *Pros:* Can support independent service scaling and asynchronous workflows when a domain requires them.
+   * *Cons:* Adds operational and design complexity that is not justified by the current domain, which has one primary
+     actor and one primary managed resource.
+
+4. **Serverless deployment**
+   * *Pros:* Can reduce server management and scale individual functions on demand.
+   * *Cons:* Conflicts with the explicit Docker Compose requirement and adds provider-specific deployment decisions
+     before they are needed.
+
 ## Decision
 
 We will build the application as a simple containerized three-layer web application:
@@ -70,28 +94,6 @@ reverse proxy to the backend API. The deployed application will expose a single 
 proxied to the backend service.
 
 The specific hosting provider is outside the scope of this ADR.
-
-## Considered Options
-
-1. **Simple containerized three-layer application**
-   * *Pros:* Simple to understand, aligns with the existing constraints, supports one-command setup, and keeps the UI,
-     API, and persistence responsibilities clear.
-   * *Cons:* The initial deployment model is limited to a single host and does not provide high availability by itself.
-
-2. **Single full-stack framework application**
-   * *Pros:* Could reduce the number of runtime applications and consolidate routing, rendering, and API behavior.
-   * *Cons:* Does not match the desired explicit separation between frontend and backend concerns, and is unnecessary
-     for a small internal CRUD panel with a REST API.
-
-3. **Microservices or event-driven architecture**
-   * *Pros:* Can support independent service scaling and asynchronous workflows when a domain requires them.
-   * *Cons:* Adds operational and design complexity that is not justified by the current domain, which has one primary
-     actor and one primary managed resource.
-
-4. **Serverless deployment**
-   * *Pros:* Can reduce server management and scale individual functions on demand.
-   * *Cons:* Conflicts with the explicit Docker Compose requirement and adds provider-specific deployment decisions
-     before they are needed.
 
 ## Consequences
 

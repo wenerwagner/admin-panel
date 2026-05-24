@@ -29,6 +29,28 @@ This ADR records engineering controls and product assumptions. It is not legal a
 the legal basis, privacy notice, retention period, data subject request process, and production operating
 responsibilities before real production operation.
 
+## Considered Options
+
+Chosen option: **Access control, minimization, masking, and logging redaction without field-level encryption**.
+
+1. **Access control, minimization, masking, and logging redaction without field-level encryption** *(chosen)*
+   * *Pros:* Practical for v1, supports search and uniqueness, keeps implementation understandable, and directly
+     addresses the main exposure surfaces.
+   * *Cons:* Database operators or database compromise could expose stored PII unless infrastructure controls are
+     strong.
+
+2. **Application-level field encryption for CPF, email, and phone**
+   * *Pros:* Can reduce exposure from direct database access.
+   * *Cons:* Complicates uniqueness, search, validation, display, key management, and incident recovery.
+
+3. **Full LGPD workflow in v1**
+   * *Pros:* More complete privacy operations inside the application.
+   * *Cons:* Larger product scope and requires legal/business process decisions that are not yet defined.
+
+4. **Hard delete on student deletion**
+   * *Pros:* Removes active rows immediately.
+   * *Cons:* Can conflict with record retention obligations and accidental deletion recovery.
+
 ## Decision
 
 The application will treat the following student fields as personal data:
@@ -201,26 +223,6 @@ The API test suite must cover:
 * duplicate active CPF/email conflict behavior
 * soft-deleted student exclusion
 * absence of submitted password/CPF/phone in tested log paths where practical
-
-## Considered Options
-
-1. **Access control, minimization, masking, and logging redaction without field-level encryption**
-   * *Pros:* Practical for v1, supports search and uniqueness, keeps implementation understandable, and directly
-     addresses the main exposure surfaces.
-   * *Cons:* Database operators or database compromise could expose stored PII unless infrastructure controls are
-     strong.
-
-2. **Application-level field encryption for CPF, email, and phone**
-   * *Pros:* Can reduce exposure from direct database access.
-   * *Cons:* Complicates uniqueness, search, validation, display, key management, and incident recovery.
-
-3. **Full LGPD workflow in v1**
-   * *Pros:* More complete privacy operations inside the application.
-   * *Cons:* Larger product scope and requires legal/business process decisions that are not yet defined.
-
-4. **Hard delete on student deletion**
-   * *Pros:* Removes active rows immediately.
-   * *Cons:* Can conflict with record retention obligations and accidental deletion recovery.
 
 ## Consequences
 
