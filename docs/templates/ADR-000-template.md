@@ -1,7 +1,10 @@
 ---
 title: User CRUD API
-type: feature
+type: architecture
 status: draft
+date: YYYY-MM-DD
+authors:
+  - Name <email>
 tags: [backend, users, crud]
 area: admin-backoffice
 related: ["[[Auth API]]", "[[User Entity]]"]
