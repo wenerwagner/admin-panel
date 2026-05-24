@@ -1,0 +1,576 @@
+openapi: 3.1.0
+info:
+  title: Escola do Breno Admin Panel API
+  version: 0.1.0
+  description: Private v1 REST API for authenticated admin login and student CRUD.
+servers:
+  - url: http://localhost:3000/api
+    description: Local API server
+tags:
+  - name: Health
+    description: Service health checks.
+  - name: Auth
+    description: Admin authentication and session management.
+  - name: Students
+    description: Authenticated student record management.
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Check API health
+      operationId: getHealth
+      responses:
+        "200":
+          description: API is healthy.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Sign in as an admin
+      operationId: loginAdmin
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login succeeded. The response sets the HTTP-only session cookie.
+          headers:
+            Set-Cookie:
+              description: HTTP-only admin session cookie.
+              schema:
+                type: string
+                example: admin_session=opaque-token; HttpOnly; SameSite=Lax; Path=/
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/InvalidCredentials"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get the current admin session
+      operationId: getCurrentAdmin
+      responses:
+        "200":
+          description: Current admin and CSRF token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentAdminResponse"
+        "401":
+          $ref: "#/components/responses/AuthenticationRequired"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Revoke the current admin session
+      operationId: logoutAdmin
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "204":
+          description: Logout succeeded. The session cookie is cleared.
+          headers:
+            Set-Cookie:
+              description: Expired admin session cookie.
+              schema:
+                type: string
+        "401":
+          $ref: "#/components/responses/AuthenticationRequired"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /students:
+    get:
+      tags: [Students]
+      summary: List non-deleted students
+      operationId: listStudents
+      parameters:
+        - name: q
+          in: query
+          description: Searches name, email, CPF digits, and phone digits. May contain PII and must not be logged.
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/StudentStatus"
+        - name: subscribedPlan
+          in: query
+          schema:
+            $ref: "#/components/schemas/SubscribedPlan"
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        "200":
+          description: Paginated student summaries with masked PII fields.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentListResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthenticationRequired"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags: [Students]
+      summary: Create a student
+      operationId: createStudent
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateStudentRequest"
+      responses:
+        "201":
+          description: Student created with full formatted PII fields.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthenticationRequired"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /students/{studentId}:
+    parameters:
+      - $ref: "#/components/parameters/StudentId"
+    get:
+      tags: [Students]
+      summary: Get a non-deleted student
+      operationId: getStudent
+      responses:
+        "200":
+          description: Student detail with full formatted PII fields.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthenticationRequired"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    patch:
+      tags: [Students]
+      summary: Partially update a non-deleted student
+      operationId: updateStudent
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStudentRequest"
+      responses:
+        "200":
+          description: Student updated with full formatted PII fields.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentDetail"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthenticationRequired"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags: [Students]
+      summary: Soft-delete a student
+      operationId: deleteStudent
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "204":
+          description: Student was soft-deleted.
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/AuthenticationRequired"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+components:
+  securitySchemes:
+    AdminSessionCookie:
+      type: apiKey
+      in: cookie
+      name: admin_session
+      description: HTTP-only opaque admin session cookie.
+  parameters:
+    CsrfToken:
+      name: X-CSRF-Token
+      in: header
+      required: true
+      description: CSRF token returned by GET /auth/me. Required for authenticated state-changing requests.
+      schema:
+        type: string
+    StudentId:
+      name: studentId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            validation:
+              value:
+                error:
+                  code: VALIDATION_ERROR
+                  message: Request validation failed
+                  details:
+                    - field: email
+                      message: Invalid email
+    AuthenticationRequired:
+      description: A valid admin session is required.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            authenticationRequired:
+              value:
+                error:
+                  code: AUTHENTICATION_REQUIRED
+                  message: Authentication required
+    InvalidCredentials:
+      description: Login credentials are invalid.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            invalidCredentials:
+              value:
+                error:
+                  code: INVALID_CREDENTIALS
+                  message: Invalid email or password
+    Forbidden:
+      description: The request is forbidden, commonly because the CSRF token is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            forbidden:
+              value:
+                error:
+                  code: FORBIDDEN
+                  message: Invalid CSRF token
+    NotFound:
+      description: The requested route or student was not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            notFound:
+              value:
+                error:
+                  code: NOT_FOUND
+                  message: Student not found
+    Conflict:
+      description: A resource conflict occurred.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            conflict:
+              value:
+                error:
+                  code: CONFLICT
+                  message: Student email or CPF already exists
+    RateLimited:
+      description: Too many requests were made.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            rateLimited:
+              value:
+                error:
+                  code: RATE_LIMITED
+                  message: Too many requests
+    InternalError:
+      description: Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          examples:
+            internal:
+              value:
+                error:
+                  code: INTERNAL_ERROR
+                  message: Unexpected server error
+                  requestId: 7f83e8b4-6254-4df1-84de-2df28ed5bb22
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+    LoginRequest:
+      type: object
+      required: [email, password]
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@example.com
+        password:
+          type: string
+          format: password
+          minLength: 1
+          example: correct-password
+    AuthResponse:
+      type: object
+      required: [admin]
+      properties:
+        admin:
+          $ref: "#/components/schemas/Admin"
+    CurrentAdminResponse:
+      allOf:
+        - $ref: "#/components/schemas/AuthResponse"
+        - type: object
+          required: [csrfToken]
+          properties:
+            csrfToken:
+              type: string
+    Admin:
+      type: object
+      required: [id, name, email]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Breno Admin
+        email:
+          type: string
+          format: email
+          example: admin@example.com
+    SubscribedPlan:
+      type: string
+      enum: [basic, premium]
+    StudentStatus:
+      type: string
+      enum: [active, paused, canceled]
+    StudentInputFields:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          example: Ana Silva
+        email:
+          type: string
+          format: email
+          example: ana@example.com
+        cpf:
+          type: string
+          description: Brazilian CPF, accepted formatted or digits-only.
+          example: 529.982.247-25
+        phone:
+          type: string
+          description: Brazilian phone number accepted in local or E.164-style formats.
+          example: (81) 99999-8888
+        subscribedPlan:
+          $ref: "#/components/schemas/SubscribedPlan"
+        status:
+          $ref: "#/components/schemas/StudentStatus"
+    CreateStudentRequest:
+      allOf:
+        - $ref: "#/components/schemas/StudentInputFields"
+        - type: object
+          required: [name, email, cpf, phone, subscribedPlan, status]
+    UpdateStudentRequest:
+      allOf:
+        - $ref: "#/components/schemas/StudentInputFields"
+        - type: object
+          minProperties: 1
+          description: Partial student update. Explicit null and empty strings are rejected.
+    StudentDetail:
+      type: object
+      required: [id, name, email, cpf, phone, subscribedPlan, status, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Ana Silva
+        email:
+          type: string
+          format: email
+          description: Full email in detail, create, and update responses.
+          example: ana@example.com
+        cpf:
+          type: string
+          description: Full formatted CPF in detail, create, and update responses.
+          example: 529.982.247-25
+        phone:
+          type: string
+          description: Full formatted phone in detail, create, and update responses.
+          example: +55 81 99999 8888
+        subscribedPlan:
+          $ref: "#/components/schemas/SubscribedPlan"
+        status:
+          $ref: "#/components/schemas/StudentStatus"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    StudentSummary:
+      allOf:
+        - $ref: "#/components/schemas/StudentDetail"
+        - type: object
+          properties:
+            email:
+              type: string
+              description: Masked email in list responses.
+              example: a***@example.com
+            cpf:
+              type: string
+              description: Masked CPF in list responses.
+              example: "***.982.247-**"
+            phone:
+              type: string
+              description: Masked phone in list responses.
+              example: "(**) *****-8888"
+    StudentListResponse:
+      type: object
+      required: [data, page, pageSize, total, totalPages]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/StudentSummary"
+        page:
+          type: integer
+          minimum: 1
+          example: 1
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 100
+          example: 20
+        total:
+          type: integer
+          minimum: 0
+          example: 57
+        totalPages:
+          type: integer
+          minimum: 0
+          example: 3
+    ErrorDetail:
+      type: object
+      required: [message]
+      properties:
+        field:
+          type: string
+          example: email
+        message:
+          type: string
+          example: Invalid email
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - AUTHENTICATION_REQUIRED
+            - INVALID_CREDENTIALS
+            - FORBIDDEN
+            - NOT_FOUND
+            - CONFLICT
+            - RATE_LIMITED
+            - INTERNAL_ERROR
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorDetail"
+        requestId:
+          type: string
+          description: Present when available for unexpected internal errors.
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+security:
+  - AdminSessionCookie: []

@@ -14,6 +14,7 @@ Default local URLs:
 
 - Web app: `http://localhost:8080`
 - API health: `http://localhost:3000/api/health`
+- API docs: `http://localhost:3000/api/docs`
 - API through Caddy: `http://localhost:8080/api/health`
 - PostgreSQL: `localhost:5432`
 
@@ -61,9 +62,11 @@ Delivered so far:
 - PostgreSQL-backed API test harness with Supertest and Vitest
 - Admin password hashing and create/seed command
 - Admin auth session endpoints: `POST /api/auth/login`, `GET /api/auth/me`, and `POST /api/auth/logout`
+- Student API endpoints: `GET`, `POST`, `PATCH`, and `DELETE /api/students`
+- Maintained OpenAPI spec with local-only Swagger UI at `GET /api/docs`
 
 Not delivered yet:
 
-- Student CRUD
+- Student CRUD web UI
 
 The main AI tool used for implementation work is Codex.
