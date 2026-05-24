@@ -47,3 +47,7 @@ Architecture decisions are documented in [docs/adr](adr/).
 ### Draft
 
 - [ADR-001 - Application Architecture and Technology Stack](adr/ADR-001-application-architecture-and-technology-stack.md)
+- [ADR-002 - Authentication and Authorization Strategy](adr/ADR-002-authentication-and-authorization-strategy.md)
+- [ADR-003 - Student Domain Model and Entity Definitions](adr/ADR-003-student-domain-model-and-entity-definitions.md)
+- [ADR-004 - REST API Design and Naming Conventions](adr/ADR-004-rest-api-design-and-naming-conventions.md)
+- [ADR-005 - PII and LGPD Compliance Controls](adr/ADR-005-pii-and-lgpd-compliance-controls.md)
