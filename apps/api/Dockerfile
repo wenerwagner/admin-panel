@@ -10,6 +10,7 @@ RUN npm ci
 
 COPY apps/api apps/api
 
+RUN npm run prisma:generate --workspace apps/api
 RUN npm run build --workspace apps/api
 
 FROM node:22-alpine AS runtime
@@ -25,7 +26,9 @@ COPY apps/web/package.json apps/web/package.json
 
 RUN npm ci --omit=dev --workspace apps/api && npm cache clean --force
 
+COPY --from=build /app/node_modules/.prisma node_modules/.prisma
 COPY --from=build /app/apps/api/dist apps/api/dist
+COPY apps/api/openapi.yaml apps/api/openapi.yaml
 
 EXPOSE 3000
 
