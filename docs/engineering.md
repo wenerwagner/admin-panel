@@ -161,6 +161,16 @@ npm run dev --workspace apps/web
 
 `npm run dev --workspace apps/web` starts the Vite dev server on port `5173` by default.
 
+Implemented Docker Compose commands:
+
+```sh
+docker compose config
+docker compose up --build
+```
+
+The Compose stack starts PostgreSQL, the API, and the Caddy-served web app. By default the API is available at
+`http://localhost:3000`, the web app is available at `http://localhost:8080`, and Caddy proxies `/api/*` to the API.
+
 The README should contain the shortest setup path for a clean checkout. This document should contain the broader
 engineering workflow and command reference.
 

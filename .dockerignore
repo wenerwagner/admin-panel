@@ -1,0 +1,12 @@
+.git
+.local
+node_modules
+dist
+build
+coverage
+.env
+.env.*
+!.env.example
+npm-debug.log*
+*.tsbuildinfo
+.DS_Store
