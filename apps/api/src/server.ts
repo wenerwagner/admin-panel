@@ -1,9 +1,8 @@
 import { app } from "./app.js";
+import { parseEnv } from "./config/env.js";
 
-const DEFAULT_PORT = 3000;
-const parsedPort = Number.parseInt(process.env.PORT ?? "", 10);
-const port = Number.isNaN(parsedPort) ? DEFAULT_PORT : parsedPort;
+const env = parseEnv(process.env);
 
-app.listen(port, () => {
-  console.log(`API server listening on port ${port}`);
+app.listen(env.port, () => {
+  console.log(`API server listening on port ${env.port}`);
 });
