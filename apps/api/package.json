@@ -1,0 +1,13 @@
+{
+  "name": "@admin-panel/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo \"API build is not implemented yet\"",
+    "dev": "echo \"API dev server is not implemented yet\"",
+    "lint": "echo \"API lint is not implemented yet\"",
+    "test": "echo \"API tests are not implemented yet\"",
+    "typecheck": "echo \"API typecheck is not implemented yet\""
+  }
+}
