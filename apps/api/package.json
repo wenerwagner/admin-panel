@@ -4,10 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "echo \"API build is not implemented yet\"",
-    "dev": "echo \"API dev server is not implemented yet\"",
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/server.ts",
     "lint": "echo \"API lint is not implemented yet\"",
     "test": "echo \"API tests are not implemented yet\"",
-    "typecheck": "echo \"API typecheck is not implemented yet\""
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3"
   }
 }
