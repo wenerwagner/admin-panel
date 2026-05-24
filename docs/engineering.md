@@ -152,6 +152,12 @@ npm run dev --workspace apps/api
 `npm run dev --workspace apps/api` starts the Express API on port `3000` by default. Set `PORT` to use a different
 local port.
 
+`npm test --workspace apps/api` runs Vitest API tests against real PostgreSQL. Start the local database first with
+`docker compose up postgres`. By default, the test harness uses
+`postgres://admin_panel:admin_panel_password@localhost:5432/admin_panel?schema=test`, applies Prisma migrations to that
+schema, and resets application tables before each test. Set `TEST_DATABASE_URL` to use a different disposable
+PostgreSQL database or schema.
+
 The API validates required environment variables at startup. Local Docker Compose defaults are documented in
 [`.env.example`](../.env.example). Production must provide explicit secrets and must set `SESSION_COOKIE_SECURE=true`.
 
