@@ -20,6 +20,9 @@ Default local URLs:
 Optional local defaults are documented in [.env.example](.env.example). The stack also has built-in defaults, so an
 `.env` file is not required for the scaffold.
 
+The API validates environment variables before startup. For production-like runs, provide explicit values for
+`DATABASE_URL`, `CSRF_SECRET`, session settings, CORS origins, proxy trust, and log level.
+
 ## Current Scope
 
 Delivered so far:
@@ -28,6 +31,7 @@ Delivered so far:
 - TypeScript Express API scaffold with `GET /api/health`
 - Vite React web scaffold with placeholder login and students pages
 - Docker Compose stack with PostgreSQL, API, Caddy-served web app, and a persistent PostgreSQL volume
+- Validated API environment configuration
 
 Not delivered yet:
 

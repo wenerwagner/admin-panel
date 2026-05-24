@@ -144,12 +144,16 @@ Implemented API scaffold commands:
 
 ```sh
 npm run build --workspace apps/api
+npm test --workspace apps/api
 npm run typecheck --workspace apps/api
 npm run dev --workspace apps/api
 ```
 
 `npm run dev --workspace apps/api` starts the Express API on port `3000` by default. Set `PORT` to use a different
 local port.
+
+The API validates required environment variables at startup. Local Docker Compose defaults are documented in
+[`.env.example`](../.env.example). Production must provide explicit secrets and must set `SESSION_COOKIE_SECURE=true`.
 
 Implemented web scaffold commands:
 
