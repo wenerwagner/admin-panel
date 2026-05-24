@@ -1,0 +1,13 @@
+{
+  "name": "@admin-panel/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo \"Web build is not implemented yet\"",
+    "dev": "echo \"Web dev server is not implemented yet\"",
+    "lint": "echo \"Web lint is not implemented yet\"",
+    "test": "echo \"Web tests are not implemented yet\"",
+    "typecheck": "echo \"Web typecheck is not implemented yet\""
+  }
+}
