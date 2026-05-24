@@ -24,6 +24,14 @@ describe("API error messages", () => {
       cpf: "Invalid CPF",
     });
   });
+
+  it("extracts conflict field errors when the API provides field details", () => {
+    const error = apiError("CONFLICT", [{ field: "cpf", message: "CPF already exists" }]);
+
+    expect(apiFieldErrors(error)).toEqual({
+      cpf: "CPF already exists",
+    });
+  });
 });
 
 function apiError(code: ErrorCode, details: ApiErrorDetail[] = []) {

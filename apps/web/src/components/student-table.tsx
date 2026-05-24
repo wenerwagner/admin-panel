@@ -1,4 +1,5 @@
 import type { StudentSummary } from "../types/api.js";
+import { navigateTo } from "../routes/navigation.js";
 import { formatDateTime, formatStudentStatus, formatSubscribedPlan } from "../utils/formatters.js";
 
 export function StudentTable({ students }: { students: StudentSummary[] }) {
@@ -41,7 +42,14 @@ export function StudentTable({ students }: { students: StudentSummary[] }) {
               </td>
               <td>{formatDateTime(student.updatedAt)}</td>
               <td>
-                <a className="table-action" href={`/students/${student.id}/edit`}>
+                <a
+                  className="table-action"
+                  href={`/students/${student.id}/edit`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    navigateTo(`/students/${student.id}/edit`);
+                  }}
+                >
                   Edit
                 </a>
               </td>
