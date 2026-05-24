@@ -34,6 +34,7 @@ Delivered so far:
 - Validated API environment configuration
 - Prisma schema and initial migration for admins, sessions, and students
 - Backend error handling foundation with typed API errors and centralized middleware
+- Structured backend request logging with request IDs
 
 Not delivered yet:
 
