@@ -21,7 +21,7 @@ export function apiErrorMessage(error: unknown): string {
 }
 
 export function apiFieldErrors(error: unknown): Record<string, string> {
-  if (!(error instanceof ApiError) || error.code !== "VALIDATION_ERROR") {
+  if (!(error instanceof ApiError) || (error.code !== "VALIDATION_ERROR" && error.code !== "CONFLICT")) {
     return {};
   }
 
