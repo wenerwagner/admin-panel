@@ -1,4 +1,5 @@
 import { StrictMode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRoot } from "react-dom/client";
 
 import { Router } from "./routes/router.js";
@@ -10,8 +11,12 @@ if (!rootElement) {
   throw new Error("Root element not found");
 }
 
+const queryClient = new QueryClient();
+
 createRoot(rootElement).render(
   <StrictMode>
-    <Router />
+    <QueryClientProvider client={queryClient}>
+      <Router />
+    </QueryClientProvider>
   </StrictMode>,
 );
