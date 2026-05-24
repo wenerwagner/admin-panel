@@ -51,6 +51,26 @@ docs/
 Shared internal packages are intentionally avoided in v1. They should be introduced only when repeated code or shared
 contracts justify the extra structure.
 
+## Technology Summary
+
+The accepted v1 technology stack is:
+
+- **Language and runtime:** TypeScript for frontend and backend; Node.js for the backend runtime.
+- **Frontend:** React, Vite, TanStack Query, React Hook Form, and Zod.
+- **Backend API:** Express, REST, Zod request validation, centralized Express error middleware, and Node's built-in
+  `crypto.randomBytes` for high-entropy session token generation.
+- **Authentication and security:** `argon2` password hashing, PostgreSQL-backed opaque sessions, HTTP-only cookies,
+  CSRF tokens sent with `X-CSRF-Token`, application-level login rate limiting, explicit CORS configuration, and
+  configured reverse-proxy trust only behind Caddy or another known proxy.
+- **Database and persistence:** PostgreSQL, Prisma, Prisma migrations, and raw SQL migrations where PostgreSQL partial
+  unique indexes require support beyond Prisma schema capabilities.
+- **API documentation:** Human-reviewed OpenAPI specification and local-only Swagger UI.
+- **Logging:** `pino` structured logging with explicit redaction and serializers; `pino-pretty` or equivalent may be
+  used for local human-readable logs.
+- **Testing:** Vitest, Supertest, a real disposable PostgreSQL test database, and Prisma.
+- **Deployment:** Docker Compose, Caddy, containerized frontend/backend/PostgreSQL services, and a persistent Docker
+  volume for PostgreSQL.
+
 ## Deployment Model
 
 Docker Compose is the local development, evaluation, and initial deployment model. The full application must run with:
@@ -88,6 +108,12 @@ password reset, admin-user management, and external identity providers are defer
 
 Cookie-based sessions require CSRF protection for authenticated state-changing requests. The SPA sends the CSRF token in
 the `X-CSRF-Token` header. Login is exempt from CSRF protection but remains rate-limited.
+
+The Express backend trusts reverse proxy headers only when explicitly configured for Caddy or another known proxy. The
+API is same-origin only in production: CORS is disabled or restricted there, while local development may allow the Vite
+dev server origin through environment configuration.
+
+Backend environment configuration is explicit and validated at startup with Zod.
 
 ## Student Domain Model
 
