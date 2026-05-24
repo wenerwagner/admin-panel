@@ -60,10 +60,10 @@ Delivered so far:
 - Structured backend request logging with request IDs
 - PostgreSQL-backed API test harness with Supertest and Vitest
 - Admin password hashing and create/seed command
+- Admin auth session endpoints: `POST /api/auth/login`, `GET /api/auth/me`, and `POST /api/auth/logout`
 
 Not delivered yet:
 
-- Admin login
 - Student CRUD
 
 The main AI tool used for implementation work is Codex.
