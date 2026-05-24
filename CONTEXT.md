@@ -1,19 +1,52 @@
-CONTEXT.md should have:
+# Context
 
-- [X] Domain glossary (problem-domain vocabulary, not code terminology)
-- [ ] Modeling decisions (why these entities, fields, and relationships were chosen)
-- [ ] This is not a README regurgitation. It is the document another person (human or AI agent) would read to understand
-  the domain in 5 minutes.
+This file gives fast domain and project orientation for humans and AI agents. It is not a README, architecture record,
+full product specification, session log, issue progress note, or PR status file.
 
-## Glossary
+## Product
 
-<!-- It should be in sync with the /docs/product.md glossary -->
+This repository contains the administrative student management panel for Escola do Breno. The product is a focused
+internal CRUD backoffice where authorized admins sign in and manage student records.
 
-- Admin: Authorized user who can access the management panel and perform student CRUD operations.
-- Student: Person enrolled or represented in Breno School's administrative records.
-- CPF: Brazilian individual taxpayer registry number. Treated as sensitive personal data.
-- Phone number: Student contact number. Treated as sensitive personal data.
-- Subscribed plan: The student's commercial plan, such as `basic` or `premium`.
-- Status: Current administrative state of a student record, such as `active`, `canceled`, or `paused`. The status is
-  descriptive only; it must not imply business-rule transitions unless explicitly added later.
-- CRUD: Create, read, update, and delete operations for student records.
+The app should stay intentionally simple. It stores and maintains student data securely; it does not model student
+lifecycle workflows or broader school operations.
+
+## Current V1 Scope
+
+V1 includes admin login and student CRUD: list, create, edit, and delete. Search and filtering in the student list are
+optional.
+
+V1 does not include student lifecycle workflows, status transition rules, audit history, scheduled jobs, public student
+access, RBAC, password reset, admin-user management, external identity providers, or production operations automation.
+
+## Domain Vocabulary
+
+For the full product glossary, use `docs/product.md`. This file keeps only the minimum vocabulary needed for fast
+orientation.
+
+- **Admin:** Authorized user who can access the management panel and perform student CRUD operations.
+- **Student:** Person enrolled or represented in Escola do Breno administrative records.
+- **CPF:** Brazilian individual taxpayer registry number. Treat as sensitive personal data.
+- **Phone number:** Student contact number. Treat as sensitive personal data.
+- **Subscribed plan:** The student's commercial plan, such as `basic` or `premium`.
+- **Status:** Current administrative state of a student record, such as `active`, `paused`, or `canceled`. Status is
+  descriptive only unless a later accepted decision adds transition rules.
+- **CRUD:** Create, read, update, and delete operations for student records.
+
+## Modeling Notes
+
+All product-defined student fields are required on create: name, email, CPF, phone number, subscribed plan, and status.
+
+Student deletion is modeled as soft delete. Student email and CPF must be unique among non-deleted students.
+
+CPF and phone number are sensitive identifiers. CPF receives heightened care because it is a strong Brazilian individual
+identifier.
+
+Student status is not a workflow state machine in v1. Do not infer rules such as "canceled students cannot be edited"
+unless a later accepted decision adds them.
+
+## Technical Orientation
+
+The accepted implementation is a TypeScript React SPA, TypeScript Express REST API, PostgreSQL database, Prisma
+migrations, and Docker Compose deployment. See `docs/architecture.md` and `docs/adr/` for accepted architecture
+decisions.

@@ -80,6 +80,22 @@ GitHub Issues is the active tracker for implementation work.
 The local `issues/` directory was removed after its drafts were migrated. New implementation work should be opened in
 GitHub Issues, not added as local issue draft files.
 
+Issue implementation should happen in a short-lived branch created from up-to-date `main`. If an issue number is known,
+include it in the branch name when practical, for example:
+
+```text
+feat/issue-12-student-list
+fix/issue-18-login-session
+docs/issue-21-engineering-process
+```
+
+Pull requests for issue work should use [.github/pull_request_template.md](../.github/pull_request_template.md) and
+link the issue with `Refs #N` by default. Use automatic-closing keywords such as `Closes #N`, `Fixes #N`, or
+`Resolves #N` only when automatic issue closure after merge is intended.
+
+Issue and PR labels, assignees, milestones, project fields, and closure state are part of project triage and should be
+changed intentionally.
+
 ## Deferred Decisions
 
 Any known decision that is intentionally postponed must be recorded in [open questions](open-questions.md). Do not leave
