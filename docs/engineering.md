@@ -151,6 +151,16 @@ npm run dev --workspace apps/api
 `npm run dev --workspace apps/api` starts the Express API on port `3000` by default. Set `PORT` to use a different
 local port.
 
+Implemented web scaffold commands:
+
+```sh
+npm run build --workspace apps/web
+npm run typecheck --workspace apps/web
+npm run dev --workspace apps/web
+```
+
+`npm run dev --workspace apps/web` starts the Vite dev server on port `5173` by default.
+
 The README should contain the shortest setup path for a clean checkout. This document should contain the broader
 engineering workflow and command reference.
 
