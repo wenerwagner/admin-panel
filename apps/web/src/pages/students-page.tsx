@@ -2,6 +2,7 @@ import { type FormEvent, useMemo, useState } from "react";
 
 import { StudentTable } from "../components/student-table.js";
 import { useStudents } from "../hooks/use-students.js";
+import { navigateTo } from "../routes/navigation.js";
 import type { StudentListQuery, StudentStatus, SubscribedPlan } from "../types/api.js";
 import { apiErrorMessage } from "../utils/error-messages.js";
 
@@ -101,7 +102,14 @@ export function StudentsPage() {
           </label>
         </div>
 
-        <a className="primary-link" href="/students/new">
+        <a
+          className="primary-link"
+          href="/students/new"
+          onClick={(event) => {
+            event.preventDefault();
+            navigateTo("/students/new");
+          }}
+        >
           New student
         </a>
       </div>
