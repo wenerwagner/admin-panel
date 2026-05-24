@@ -35,6 +35,12 @@ orientation.
 
 ## Modeling Notes
 
+The v1 domain model has three primary entities: `AdminUser`, `Session`, and `Student`.
+
+Admins are application users who authenticate with email and password. Admin registration is not public. The first admin
+is created through an explicit local seed or admin creation command. Sessions are opaque, PostgreSQL-backed, and stored
+in HTTP-only cookies; the browser does not receive raw session state outside the cookie.
+
 All product-defined student fields are required on create: name, email, CPF, phone number, subscribed plan, and status.
 
 Student deletion is modeled as soft delete. Student email and CPF must be unique among non-deleted students.
@@ -42,8 +48,17 @@ Student deletion is modeled as soft delete. Student email and CPF must be unique
 CPF and phone number are sensitive identifiers. CPF receives heightened care because it is a strong Brazilian individual
 identifier.
 
+The API accepts formatted or unformatted CPF values, validates CPF check digits, and stores CPF as digits only. Phone
+numbers are validated as Brazilian phone numbers and stored in an E.164-style format.
+
+Student list responses expose masked email, CPF, and phone values. Student detail, create, and update responses expose
+full formatted values to authenticated admins.
+
 Student status is not a workflow state machine in v1. Do not infer rules such as "canceled students cannot be edited"
 unless a later accepted decision adds them.
+
+The accepted student enum values are `basic` and `premium` for subscribed plan, and `active`, `paused`, and `canceled`
+for status.
 
 ## Technical Orientation
 

@@ -126,27 +126,38 @@ is not required.
 
 ## Local Development
 
-Exact commands must be documented once the application scaffold and scripts exist. Until then, the required command
-categories are:
+Install dependencies from the repository root:
 
-* install dependencies
-* start the local stack
-* run lint
-* run TypeScript typecheck
-* run tests
-* build the API and web apps
-* validate Docker Compose configuration
-* run database migrations
-* reset or seed local development data
-* create or seed an admin user
+```sh
+npm install
+```
 
-Implemented API scaffold commands:
+The root workspace scripts run the matching script in each workspace when present:
+
+```sh
+npm run build
+npm run dev
+npm run lint
+npm test
+npm run typecheck
+```
+
+`npm run lint` currently runs placeholder workspace scripts. Real lint tooling is not implemented yet.
+
+### API Commands
+
+Implemented API commands:
 
 ```sh
 npm run build --workspace apps/api
 npm test --workspace apps/api
 npm run typecheck --workspace apps/api
 npm run dev --workspace apps/api
+npm run prisma:generate --workspace apps/api
+npm run prisma:migrate --workspace apps/api
+npm run prisma:validate --workspace apps/api
+npm run admin:create --workspace apps/api -- --email admin@example.com --password local-admin-password --name "Local Admin"
+npm run seed --workspace apps/api
 ```
 
 `npm run dev --workspace apps/api` starts the Express API on port `3000` by default. Set `PORT` to use a different
@@ -161,39 +172,76 @@ PostgreSQL database or schema.
 The API validates required environment variables at startup. Local Docker Compose defaults are documented in
 [`.env.example`](../.env.example). Production must provide explicit secrets and must set `SESSION_COOKIE_SECURE=true`.
 
-Implemented web scaffold commands:
+`npm run prisma:migrate --workspace apps/api` runs Prisma `migrate dev` against the configured database. Use it for
+local development after PostgreSQL is running. Production-style migration execution should use Prisma `migrate deploy`
+against an explicitly configured database; the final production migration procedure is still deferred until the
+deployment target is selected.
+
+`npm run admin:create --workspace apps/api -- --email ... --password ... --name ...` creates an admin intentionally.
+It fails if the email already exists and does not overwrite the stored password. `npm run seed --workspace apps/api`
+uses the same implementation and may read `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_NAME` from the environment.
+
+### Web Commands
+
+Implemented web commands:
 
 ```sh
 npm run build --workspace apps/web
+npm test --workspace apps/web
 npm run typecheck --workspace apps/web
 npm run dev --workspace apps/web
 ```
 
 `npm run dev --workspace apps/web` starts the Vite dev server on port `5173` by default.
 
-Implemented Docker Compose commands:
+### Docker Compose Commands
 
 ```sh
 docker compose config
 docker compose up --build
+docker compose up postgres
+docker compose down
+docker compose down -v
 ```
 
 The Compose stack starts PostgreSQL, the API, and the Caddy-served web app. By default the API is available at
 `http://localhost:3000`, the web app is available at `http://localhost:8080`, and Caddy proxies `/api/*` to the API.
+
+For a clean local database, start PostgreSQL and run migrations before creating an admin:
+
+```sh
+docker compose up postgres
+npm run prisma:migrate --workspace apps/api
+npm run admin:create --workspace apps/api -- --email admin@example.com --password local-admin-password --name "Local Admin"
+```
+
+Then start the full stack:
+
+```sh
+docker compose up --build
+```
+
+`docker compose down -v` removes the local PostgreSQL volume and should be used only when intentionally resetting local
+development data.
 
 The README should contain the shortest setup path for a clean checkout. This document should contain the broader
 engineering workflow and command reference.
 
 ## Quality Gate
 
-Before merging code into `main`, the following checks should pass once the related scripts exist:
+Before merging code into `main`, the following checks should pass:
 
-* formatting or lint
-* TypeScript typecheck
-* backend tests
-* frontend build
-* Docker Compose configuration validation
-* committed migrations for schema changes
+```sh
+npm run typecheck
+npm test --workspace apps/api
+npm test --workspace apps/web
+npm run build
+docker compose config
+```
+
+Run `npm run lint` once real lint tooling replaces the current placeholder scripts.
+
+Schema changes must include committed Prisma migrations.
 
 Coverage percentage thresholds are not required for v1.
 
@@ -218,6 +266,26 @@ Rules:
 
 The production migration procedure is deferred until the production deployment target is defined.
 
+Implemented local migration command:
+
+```sh
+npm run prisma:migrate --workspace apps/api
+```
+
+Production-style migration deployment command, to be run from `apps/api` with explicit production environment:
+
+```sh
+npx prisma migrate deploy --schema prisma/schema.prisma
+```
+
+Local database reset command:
+
+```sh
+docker compose down -v
+```
+
+After resetting, start PostgreSQL again, rerun migrations, and recreate the local admin.
+
 ## Environment Variables and Secrets
 
 The project should maintain `.env.example` files once environment variables exist.
@@ -229,6 +297,46 @@ Rules:
 * production secrets must be generated and provided outside Git
 * required variables should be documented near the app that consumes them and summarized here
 * CI secrets must live in the CI provider's secret store
+
+Current local Docker Compose variables:
+
+```text
+API_PORT
+WEB_PORT
+POSTGRES_PORT
+POSTGRES_USER
+POSTGRES_PASSWORD
+POSTGRES_DB
+```
+
+Current API variables:
+
+```text
+NODE_ENV
+PORT
+DATABASE_URL
+SESSION_COOKIE_NAME
+SESSION_COOKIE_SECURE
+SESSION_TTL_HOURS
+CSRF_SECRET
+CORS_ALLOWED_ORIGINS
+TRUST_PROXY
+LOG_LEVEL
+```
+
+Current admin seed/create variables:
+
+```text
+ADMIN_EMAIL
+ADMIN_PASSWORD
+ADMIN_NAME
+```
+
+Current test override variable:
+
+```text
+TEST_DATABASE_URL
+```
 
 Unresolved production secret handling decisions must be tracked in [open questions](open-questions.md).
 
