@@ -210,6 +210,20 @@ p {
   color: #667381;
 }
 
+.danger-button {
+  min-height: 42px;
+  border: 1px solid #a33a36;
+  border-radius: 6px;
+  background: #a33a36;
+  color: #ffffff;
+  padding: 0 18px;
+  font-weight: 700;
+}
+
+.danger-button:disabled {
+  opacity: 0.72;
+}
+
 .list-section {
   display: grid;
   gap: 18px;
@@ -289,8 +303,20 @@ p {
 .table-action {
   min-height: 34px;
   border: 1px solid #b9c4cf;
+  background: #ffffff;
   color: #1d2733;
   padding: 0 12px;
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.danger-action {
+  border-color: #efc5c3;
+  color: #a33a36;
 }
 
 .table-wrap {
@@ -429,6 +455,40 @@ p {
   gap: 12px;
 }
 
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: rgb(29 39 51 / 45%);
+  padding: 24px;
+}
+
+.confirm-dialog {
+  width: min(100%, 420px);
+  border: 1px solid #d8dee6;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgb(29 39 51 / 24%);
+}
+
+.confirm-dialog h2 {
+  margin-bottom: 10px;
+}
+
+.dialog-body p {
+  margin-bottom: 0;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
 @media (max-width: 640px) {
   .app-shell {
     width: min(100% - 24px, 1120px);
@@ -470,5 +530,10 @@ p {
   .form-actions {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .dialog-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
   }
 }
