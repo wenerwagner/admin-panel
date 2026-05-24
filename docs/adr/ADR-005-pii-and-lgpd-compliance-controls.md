@@ -1,7 +1,7 @@
 ---
 title: PII and LGPD Compliance Controls
 type: architecture
-status: draft
+status: accepted
 date: 2026-05-24
 authors:
   - Wener Castro <wenerwagner@gmail.com>
@@ -16,7 +16,7 @@ related:
 
 # ADR-005 - PII and LGPD Compliance Controls
 
-* **Status:** Draft
+* **Status:** Accepted
 * **Date:** 2026-05-24
 * **Authors:** Wener Castro <wenerwagner@gmail.com>
 

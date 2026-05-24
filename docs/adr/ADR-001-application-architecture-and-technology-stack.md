@@ -1,7 +1,7 @@
 ---
 title: Application Architecture and Technology Stack
 type: architecture
-status: draft
+status: accepted
 date: 2026-05-23
 authors:
   - Wener Castro <wenerwagner@gmail.com>
@@ -11,7 +11,7 @@ area: admin-panel
 
 # ADR-001 - Application Architecture and Technology Stack
 
-* **Status:** Draft
+* **Status:** Accepted
 * **Date:** 2026-05-23
 * **Authors:** Wener Castro <wenerwagner@gmail.com>
 

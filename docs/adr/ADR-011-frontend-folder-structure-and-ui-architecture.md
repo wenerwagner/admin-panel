@@ -1,7 +1,7 @@
 ---
 title: Frontend Folder Structure and UI Architecture
 type: architecture
-status: draft
+status: accepted
 date: 2026-05-24
 authors:
   - Wener Castro <wenerwagner@gmail.com>
@@ -16,7 +16,7 @@ related:
 
 # ADR-011 - Frontend Folder Structure and UI Architecture
 
-* **Status:** Draft
+* **Status:** Accepted
 * **Date:** 2026-05-24
 * **Authors:** Wener Castro <wenerwagner@gmail.com>
 

@@ -1,7 +1,7 @@
 ---
 title: Application Error Handling Strategy
 type: architecture
-status: draft
+status: accepted
 date: 2026-05-24
 authors:
   - Wener Castro <wenerwagner@gmail.com>
@@ -15,7 +15,7 @@ related:
 
 # ADR-008 - Application Error Handling Strategy
 
-* **Status:** Draft
+* **Status:** Accepted
 * **Date:** 2026-05-24
 * **Authors:** Wener Castro <wenerwagner@gmail.com>
 
