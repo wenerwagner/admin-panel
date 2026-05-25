@@ -109,6 +109,7 @@ Nice-to-have and engineering scope delivered:
 - Admin create/seed command.
 - Backend API tests with Vitest, Supertest, and real PostgreSQL.
 - Focused frontend API utility tests.
+- GitHub Actions CI workflow for pull requests and pushes to `main`.
 - Structured backend request logging with request IDs.
 - Typed API error responses and centralized error middleware.
 
@@ -119,6 +120,6 @@ Out of scope for this delivery:
 - Public student access.
 - RBAC or multiple admin roles.
 - Student lifecycle workflows, status transition rules, restore, hard delete, audit history, or scheduled jobs.
-- Production legal policy, retention automation, backup/restore runbook, CI workflow, and deployment automation.
+- Production legal policy, retention automation, backup/restore runbook, and deployment automation.
 
 The main AI tool used for implementation work is Codex.

@@ -349,9 +349,9 @@ Unresolved production secret handling decisions must be tracked in [open questio
 
 GitHub Actions is the intended CI provider.
 
-CI is planned but not implemented yet. Once implemented, CI should run on pull requests and pushes to `main`.
+CI is implemented in `.github/workflows/ci.yml` and runs on pull requests and pushes to `main`.
 
-The CI workflow should run the merge quality gate once the required scripts exist:
+The CI workflow runs the merge quality gate:
 
 * lint or format check
 * typecheck
