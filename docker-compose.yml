@@ -19,6 +19,10 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
+    command: >
+      sh -c "npm run prisma:deploy --workspace apps/api &&
+      npm run local:seed:prod --workspace apps/api &&
+      node apps/api/dist/server.js"
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 3000
@@ -30,6 +34,9 @@ services:
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:8080}
       TRUST_PROXY: ${TRUST_PROXY:-false}
       LOG_LEVEL: ${LOG_LEVEL:-info}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-local-admin-password}
+      ADMIN_NAME: ${ADMIN_NAME:-Local Admin}
     ports:
       - "${API_PORT:-3000}:3000"
     depends_on:

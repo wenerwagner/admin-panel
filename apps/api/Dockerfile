@@ -29,6 +29,8 @@ RUN npm ci --omit=dev --workspace apps/api && npm cache clean --force
 COPY --from=build /app/node_modules/.prisma node_modules/.prisma
 COPY --from=build /app/apps/api/dist apps/api/dist
 COPY apps/api/openapi.yaml apps/api/openapi.yaml
+COPY apps/api/prisma.config.ts apps/api/prisma.config.ts
+COPY apps/api/prisma apps/api/prisma
 
 EXPOSE 3000
 
