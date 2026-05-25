@@ -2,124 +2,81 @@
 
 Administrative student management panel for Escola do Breno.
 
-## Prerequisites
+## One-Command Setup
 
-- Docker with Docker Compose
-
-## Quick Start
+Prerequisite: Docker with Docker Compose.
 
 ```sh
 docker compose up
 ```
 
-This command starts PostgreSQL, runs database migrations, creates the local admin user, seeds demo student records,
-starts the API, and serves the web app through Caddy.
+This boots the full local stack from scratch: PostgreSQL, database migrations, local admin seed, demo student seed, API,
+and the Caddy-served web app.
 
-Then sign in at `http://localhost:8080` with:
+Open the app at `http://localhost:8080`.
 
-```text
-Email: admin@example.com
-Password: local-admin-password
-```
+## Admin Access
 
-Default local URLs:
-
-- Web app: `http://localhost:8080`
-- API health: `http://localhost:3000/api/health`
-- Swagger UI: `http://localhost:8080/api/docs/`
-- OpenAPI YAML: `http://localhost:8080/api/docs/openapi.yaml`
-- Direct API Swagger UI: `http://localhost:3000/api/docs/`
-- API through Caddy: `http://localhost:8080/api/health`
-- PostgreSQL: `localhost:5432`
-
-Optional local defaults are documented in [.env.example](.env.example). The stack also has built-in defaults, so an
-`.env` file is not required for the scaffold.
-
-Swagger UI and the OpenAPI YAML are available in local development mode. They are intentionally hidden when
-`NODE_ENV=production`.
-
-The API validates environment variables before startup. For production-like runs, provide explicit values for
-`DATABASE_URL`, `CSRF_SECRET`, session settings, CORS origins, proxy trust, and log level.
-
-## Common Commands
-
-Install Node dependencies only when running local checks or workspace scripts outside Docker:
-
-```sh
-npm install
-```
-
-Run all implemented checks that do not require extra setup:
-
-```sh
-npm run typecheck
-npm run build
-npm test --workspace apps/web
-docker compose config
-```
-
-Start PostgreSQL, then run the API test suite:
-
-```sh
-docker compose up postgres
-npm test --workspace apps/api
-```
-
-The API test harness uses the configured PostgreSQL database and resets application tables before each test. Set
-`TEST_DATABASE_URL` to point tests at a disposable PostgreSQL database.
-
-## Admin User
-
-There is no public registration endpoint and no committed default production admin. `docker compose up` creates only the
-local development admin from `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_NAME`, defaulting to:
+`docker compose up` automatically creates the local admin account:
 
 ```text
 Email: admin@example.com
 Password: local-admin-password
-Name: Local Admin
 ```
 
-For manual local setup outside Compose, create an admin intentionally after PostgreSQL is running:
+To override the local seed, set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_NAME` in `.env`.
+
+To create an admin manually outside the Compose bootstrap:
 
 ```sh
 npm run admin:create --workspace apps/api -- --email admin@example.com --password local-admin-password --name "Local Admin"
 ```
 
-`npm run seed --workspace apps/api` runs the same command and can read `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and
-`ADMIN_NAME` from the environment. Existing admin emails fail explicitly and do not overwrite the stored password.
-`npm run local:seed --workspace apps/api` is idempotent and seeds the local admin plus demo student data.
+## API Documentation
+
+Swagger UI is available in local development at `http://localhost:8080/api/docs/`.
+
+The OpenAPI YAML is available at `http://localhost:8080/api/docs/openapi.yaml`.
 
 ## Delivered Scope
 
-Must-have product scope delivered:
+Completed must-have items:
 
 - Admin login with PostgreSQL-backed HTTP-only cookie sessions.
-- Student CRUD in the authenticated web UI: list, create, edit, and soft delete.
-- Student REST API endpoints for list, detail, create, update, and delete.
-- Required student fields: name, email, CPF, phone, subscribed plan, and status.
-- Docker Compose stack with PostgreSQL, API, Caddy-served web app, and a persistent PostgreSQL volume.
+- Complete student CRUD: list, add, edit, and soft delete.
+- Server-side validation for CPF, email, and Brazilian phone numbers.
+- Tests for validation, authentication, authorization, and student API behavior.
+- `docker compose up` bootstraps the app from scratch.
+- README, `CONTEXT.md`, and accepted ADRs in `docs/adr/`.
 
-Nice-to-have and engineering scope delivered:
+Completed nice-to-have items:
 
-- Student list search, status filter, subscribed-plan filter, and pagination.
-- Soft delete for student records.
-- Local-only Swagger UI at `GET /api/docs`.
-- Validated API environment configuration.
-- Prisma migrations for admins, sessions, and students.
-- Admin create/seed command.
-- Backend API tests with Vitest, Supertest, and real PostgreSQL.
-- Focused frontend API utility tests.
-- GitHub Actions CI workflow for pull requests and pushes to `main`.
-- Structured backend request logging with request IDs.
-- Typed API error responses and centralized error middleware.
+- Student search and filters by status and subscribed plan.
+- Soft delete for students, with architecture/modeling rationale in ADRs.
+- API tests with Vitest, Supertest, Prisma, and PostgreSQL.
+- Additional ADRs covering architecture, auth, API conventions, PII controls, OpenAPI, logging, errors, testing, and
+  folder structure.
+- Swagger/OpenAPI documentation for the REST API.
+- GitHub Actions quality gate.
 
-Out of scope for this delivery:
+Out of scope:
 
-- Password reset.
-- Admin-user management UI.
-- Public student access.
-- RBAC or multiple admin roles.
-- Student lifecycle workflows, status transition rules, restore, hard delete, audit history, or scheduled jobs.
-- Production legal policy, retention automation, backup/restore runbook, and deployment automation.
+- Audit log or edit history.
+- Business rules for student status transitions, such as "cannot edit canceled students."
+- Triggers, jobs, or scheduled workflows.
+- State machines.
+- Fancy UI, branding, or polished visual design.
+- Password reset, admin-user management UI, public student access, RBAC, and production operations automation.
 
-The main AI tool used for implementation work is Codex.
+## Project Docs
+
+- `CONTEXT.md`: short project orientation, stable domain context, v1 scope, vocabulary, and modeling notes.
+- `docs/product.md`: product requirements, scope, glossary, constraints, and out-of-scope items.
+- `docs/architecture.md`: summary of accepted architecture decisions.
+- `docs/adr/`: Architecture Decision Records. New ADRs should use `docs/adr/ADR-000-template.md`.
+- `docs/engineering.md`: repository workflow, branching, PR expectations, commands, checks, and testing process.
+- `docs/open-questions.md`: deferred decisions and unresolved production questions.
+
+## Primary AI Tool
+
+The primary AI tool used for implementation work was Codex.
