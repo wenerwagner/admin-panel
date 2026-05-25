@@ -19,21 +19,11 @@ npm install
 Start the local stack:
 
 ```sh
-docker compose up --build
+docker compose up
 ```
 
-This one command starts PostgreSQL, the API, and the Caddy-served web app. On a clean database, keep the stack running
-and initialize the schema from another terminal:
-
-```sh
-npm run prisma:migrate --workspace apps/api
-```
-
-Create a local admin user:
-
-```sh
-npm run admin:create --workspace apps/api -- --email admin@example.com --password local-admin-password --name "Local Admin"
-```
+This one command starts PostgreSQL, runs database migrations, creates the local admin user, seeds demo student records,
+starts the API, and serves the web app through Caddy.
 
 Then sign in at `http://localhost:8080` with:
 
@@ -79,8 +69,16 @@ The API test harness uses the configured PostgreSQL database and resets applicat
 
 ## Admin User
 
-There is no public registration endpoint and no committed default production admin. Create the first admin intentionally
-after PostgreSQL is running:
+There is no public registration endpoint and no committed default production admin. `docker compose up` creates only the
+local development admin from `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_NAME`, defaulting to:
+
+```text
+Email: admin@example.com
+Password: local-admin-password
+Name: Local Admin
+```
+
+For manual local setup outside Compose, create an admin intentionally after PostgreSQL is running:
 
 ```sh
 npm run admin:create --workspace apps/api -- --email admin@example.com --password local-admin-password --name "Local Admin"
@@ -88,6 +86,7 @@ npm run admin:create --workspace apps/api -- --email admin@example.com --passwor
 
 `npm run seed --workspace apps/api` runs the same command and can read `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and
 `ADMIN_NAME` from the environment. Existing admin emails fail explicitly and do not overwrite the stored password.
+`npm run local:seed --workspace apps/api` is idempotent and seeds the local admin plus demo student data.
 
 ## Delivered Scope
 

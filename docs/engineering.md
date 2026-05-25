@@ -154,9 +154,11 @@ npm test --workspace apps/api
 npm run typecheck --workspace apps/api
 npm run dev --workspace apps/api
 npm run prisma:generate --workspace apps/api
+npm run prisma:deploy --workspace apps/api
 npm run prisma:migrate --workspace apps/api
 npm run prisma:validate --workspace apps/api
 npm run admin:create --workspace apps/api -- --email admin@example.com --password local-admin-password --name "Local Admin"
+npm run local:seed --workspace apps/api
 npm run seed --workspace apps/api
 ```
 
@@ -173,13 +175,13 @@ The API validates required environment variables at startup. Local Docker Compos
 [`.env.example`](../.env.example). Production must provide explicit secrets and must set `SESSION_COOKIE_SECURE=true`.
 
 `npm run prisma:migrate --workspace apps/api` runs Prisma `migrate dev` against the configured database. Use it for
-local development after PostgreSQL is running. Production-style migration execution should use Prisma `migrate deploy`
-against an explicitly configured database; the final production migration procedure is still deferred until the
-deployment target is selected.
+local development after PostgreSQL is running. `npm run prisma:deploy --workspace apps/api` runs Prisma
+`migrate deploy`, which is also used by the API container before startup.
 
 `npm run admin:create --workspace apps/api -- --email ... --password ... --name ...` creates an admin intentionally.
 It fails if the email already exists and does not overwrite the stored password. `npm run seed --workspace apps/api`
 uses the same implementation and may read `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_NAME` from the environment.
+`npm run local:seed --workspace apps/api` is idempotent and seeds the local admin plus demo student data.
 
 ### Web Commands
 
@@ -198,28 +200,16 @@ npm run dev --workspace apps/web
 
 ```sh
 docker compose config
+docker compose up
 docker compose up --build
 docker compose up postgres
 docker compose down
 docker compose down -v
 ```
 
-The Compose stack starts PostgreSQL, the API, and the Caddy-served web app. By default the API is available at
+The Compose stack starts PostgreSQL, runs API migrations, creates the local admin when missing, seeds demo student
+records when missing, starts the API, and serves the web app. By default the API is available at
 `http://localhost:3000`, the web app is available at `http://localhost:8080`, and Caddy proxies `/api/*` to the API.
-
-For a clean local database, start PostgreSQL and run migrations before creating an admin:
-
-```sh
-docker compose up postgres
-npm run prisma:migrate --workspace apps/api
-npm run admin:create --workspace apps/api -- --email admin@example.com --password local-admin-password --name "Local Admin"
-```
-
-Then start the full stack:
-
-```sh
-docker compose up --build
-```
 
 `docker compose down -v` removes the local PostgreSQL volume and should be used only when intentionally resetting local
 development data.
