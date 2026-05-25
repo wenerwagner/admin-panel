@@ -232,12 +232,17 @@ engineering workflow and command reference.
 Before merging code into `main`, the following checks should pass:
 
 ```sh
+npm run prisma:generate --workspace apps/api
+npm run lint
 npm run typecheck
 npm test --workspace apps/api
 npm test --workspace apps/web
 npm run build
 docker compose config
 ```
+
+GitHub Actions runs the same quality gate on pull requests and pushes to `main`. The CI workflow provisions PostgreSQL
+for API tests and uses `TEST_DATABASE_URL` with the disposable `test` schema.
 
 Run `npm run lint` once real lint tooling replaces the current placeholder scripts.
 
