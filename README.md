@@ -26,12 +26,17 @@ Default local URLs:
 
 - Web app: `http://localhost:8080`
 - API health: `http://localhost:3000/api/health`
-- API docs: `http://localhost:3000/api/docs`
+- Swagger UI: `http://localhost:8080/api/docs/`
+- OpenAPI YAML: `http://localhost:8080/api/docs/openapi.yaml`
+- Direct API Swagger UI: `http://localhost:3000/api/docs/`
 - API through Caddy: `http://localhost:8080/api/health`
 - PostgreSQL: `localhost:5432`
 
 Optional local defaults are documented in [.env.example](.env.example). The stack also has built-in defaults, so an
 `.env` file is not required for the scaffold.
+
+Swagger UI and the OpenAPI YAML are available in local development mode. They are intentionally hidden when
+`NODE_ENV=production`.
 
 The API validates environment variables before startup. For production-like runs, provide explicit values for
 `DATABASE_URL`, `CSRF_SECRET`, session settings, CORS origins, proxy trust, and log level.
