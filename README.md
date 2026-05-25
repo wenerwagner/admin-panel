@@ -4,25 +4,15 @@ Administrative student management panel for Escola do Breno.
 
 ## Prerequisites
 
-- Node.js 20 or newer
-- npm
 - Docker with Docker Compose
 
 ## Quick Start
-
-Install dependencies:
-
-```sh
-npm install
-```
-
-Start the local stack:
 
 ```sh
 docker compose up
 ```
 
-This one command starts PostgreSQL, runs database migrations, creates the local admin user, seeds demo student records,
+This command starts PostgreSQL, runs database migrations, creates the local admin user, seeds demo student records,
 starts the API, and serves the web app through Caddy.
 
 Then sign in at `http://localhost:8080` with:
@@ -47,6 +37,12 @@ The API validates environment variables before startup. For production-like runs
 `DATABASE_URL`, `CSRF_SECRET`, session settings, CORS origins, proxy trust, and log level.
 
 ## Common Commands
+
+Install Node dependencies only when running local checks or workspace scripts outside Docker:
+
+```sh
+npm install
+```
 
 Run all implemented checks that do not require extra setup:
 
