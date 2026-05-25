@@ -241,8 +241,8 @@ npm run build
 docker compose config
 ```
 
-GitHub Actions runs the same quality gate on pull requests and pushes to `main`. The CI workflow provisions PostgreSQL
-for API tests and uses `TEST_DATABASE_URL` with the disposable `test` schema.
+GitHub Actions runs the same quality gate on pull requests and pushes to `main`. The CI workflow provisions a disposable
+PostgreSQL database for API tests and passes it through `TEST_DATABASE_URL`.
 
 Run `npm run lint` once real lint tooling replaces the current placeholder scripts.
 

@@ -74,8 +74,8 @@ docker compose up postgres
 npm test --workspace apps/api
 ```
 
-The API test harness uses the local PostgreSQL database with a dedicated `test` schema by default. Set
-`TEST_DATABASE_URL` to point tests at a different disposable PostgreSQL database.
+The API test harness uses the configured PostgreSQL database and resets application tables before each test. Set
+`TEST_DATABASE_URL` to point tests at a disposable PostgreSQL database.
 
 ## Admin User
 
