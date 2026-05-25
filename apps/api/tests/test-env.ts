@@ -1,4 +1,4 @@
-export const defaultTestDatabaseUrl = "postgres://admin_panel:admin_panel_password@localhost:5432/admin_panel?schema=test";
+export const defaultTestDatabaseUrl = "postgres://admin_panel:admin_panel_password@localhost:5432/admin_panel";
 
 export function configureTestEnv() {
   process.env.NODE_ENV = "test";

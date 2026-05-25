@@ -232,12 +232,17 @@ engineering workflow and command reference.
 Before merging code into `main`, the following checks should pass:
 
 ```sh
+npm run prisma:generate --workspace apps/api
+npm run lint
 npm run typecheck
 npm test --workspace apps/api
 npm test --workspace apps/web
 npm run build
 docker compose config
 ```
+
+GitHub Actions runs the same quality gate on pull requests and pushes to `main`. The CI workflow provisions a disposable
+PostgreSQL database for API tests and passes it through `TEST_DATABASE_URL`.
 
 Run `npm run lint` once real lint tooling replaces the current placeholder scripts.
 
@@ -344,9 +349,9 @@ Unresolved production secret handling decisions must be tracked in [open questio
 
 GitHub Actions is the intended CI provider.
 
-CI is planned but not implemented yet. Once implemented, CI should run on pull requests and pushes to `main`.
+CI is implemented in `.github/workflows/ci.yml` and runs on pull requests and pushes to `main`.
 
-The CI workflow should run the merge quality gate once the required scripts exist:
+The CI workflow runs the merge quality gate:
 
 * lint or format check
 * typecheck
