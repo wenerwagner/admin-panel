@@ -16,26 +16,33 @@ const swaggerUiOptions: swaggerUi.SwaggerUiOptions = {
     persistAuthorization: false,
   },
 };
-const swaggerHtml = swaggerUi.generateHTML(openApiDocument, swaggerUiOptions);
 
 export const docsRoutes = Router();
 
 docsRoutes.get("/docs/openapi.yaml", requireLocalDocs, (_request, response) => {
   response.type("application/yaml").send(openApiYaml);
 });
-docsRoutes.get("/docs", requireLocalDocs, (_request, response) => {
-  response.type("html").send(swaggerHtml);
-});
-docsRoutes.get("/docs/", requireLocalDocs, (_request, response) => {
-  response.type("html").send(swaggerHtml);
-});
-docsRoutes.use("/docs", requireLocalDocs, ...swaggerUi.serveFiles(openApiDocument, swaggerUiOptions));
+docsRoutes.use("/docs", requireLocalDocs, ensureDocsTrailingSlash);
+docsRoutes.use(
+  "/docs",
+  ...swaggerUi.serveFiles(openApiDocument, swaggerUiOptions),
+  swaggerUi.setup(openApiDocument, swaggerUiOptions),
+);
 
 function requireLocalDocs(request: Request, _response: Response, next: NextFunction): void {
   const env = parseEnv(process.env);
 
   if (env.nodeEnv === "production") {
     next(new NotFoundError("Route not found"));
+    return;
+  }
+
+  next();
+}
+
+function ensureDocsTrailingSlash(request: Request, response: Response, next: NextFunction): void {
+  if ((request.path === "" || request.path === "/") && !request.originalUrl.endsWith("/")) {
+    response.redirect(302, `${request.originalUrl}/`);
     return;
   }
 

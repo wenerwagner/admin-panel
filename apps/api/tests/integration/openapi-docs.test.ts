@@ -23,7 +23,9 @@ describe("OpenAPI documentation", () => {
     process.env.SESSION_COOKIE_SECURE = "false";
     const app = createApp();
 
-    const docsResponse = await request(app).get("/api/docs").expect(200);
+    await request(app).get("/api/docs").expect(302).expect("Location", "/api/docs/");
+
+    const docsResponse = await request(app).get("/api/docs/").expect(200);
     expect(docsResponse.text).toContain("Escola do Breno Admin Panel API");
     expect(docsResponse.text).toContain("swagger-ui");
 

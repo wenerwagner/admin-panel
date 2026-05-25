@@ -4,25 +4,15 @@ Administrative student management panel for Escola do Breno.
 
 ## Prerequisites
 
-- Node.js 20 or newer
-- npm
 - Docker with Docker Compose
 
 ## Quick Start
-
-Install dependencies:
-
-```sh
-npm install
-```
-
-Start the local stack:
 
 ```sh
 docker compose up
 ```
 
-This one command starts PostgreSQL, runs database migrations, creates the local admin user, seeds demo student records,
+This command starts PostgreSQL, runs database migrations, creates the local admin user, seeds demo student records,
 starts the API, and serves the web app through Caddy.
 
 Then sign in at `http://localhost:8080` with:
@@ -36,17 +26,28 @@ Default local URLs:
 
 - Web app: `http://localhost:8080`
 - API health: `http://localhost:3000/api/health`
-- API docs: `http://localhost:3000/api/docs`
+- Swagger UI: `http://localhost:8080/api/docs/`
+- OpenAPI YAML: `http://localhost:8080/api/docs/openapi.yaml`
+- Direct API Swagger UI: `http://localhost:3000/api/docs/`
 - API through Caddy: `http://localhost:8080/api/health`
 - PostgreSQL: `localhost:5432`
 
 Optional local defaults are documented in [.env.example](.env.example). The stack also has built-in defaults, so an
 `.env` file is not required for the scaffold.
 
+Swagger UI and the OpenAPI YAML are available in local development mode. They are intentionally hidden when
+`NODE_ENV=production`.
+
 The API validates environment variables before startup. For production-like runs, provide explicit values for
 `DATABASE_URL`, `CSRF_SECRET`, session settings, CORS origins, proxy trust, and log level.
 
 ## Common Commands
+
+Install Node dependencies only when running local checks or workspace scripts outside Docker:
+
+```sh
+npm install
+```
 
 Run all implemented checks that do not require extra setup:
 
