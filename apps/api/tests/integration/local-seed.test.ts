@@ -28,14 +28,14 @@ describe("seedLocalData", () => {
     expect(firstResult).toEqual({
       adminEmail: "seed-admin@example.com",
       createdAdmin: true,
-      createdStudents: 6,
+      createdStudents: 15,
       skippedStudents: 0,
     });
     expect(secondResult).toEqual({
       adminEmail: "seed-admin@example.com",
       createdAdmin: false,
       createdStudents: 0,
-      skippedStudents: 6,
+      skippedStudents: 15,
     });
 
     const admin = await testPrisma.adminUser.findUniqueOrThrow({
@@ -51,7 +51,7 @@ describe("seedLocalData", () => {
 
     expect(admin.name).toBe("Seed Admin");
     await expect(verifyPassword(admin.passwordHash, "seed-admin-password")).resolves.toBe(true);
-    expect(students).toHaveLength(6);
+    expect(students).toHaveLength(15);
   });
 });
 
