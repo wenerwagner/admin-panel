@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    name: Quality gate
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: admin_panel
+          POSTGRES_PASSWORD: admin_panel_password
+          POSTGRES_DB: admin_panel
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U admin_panel -d admin_panel"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      TEST_DATABASE_URL: postgres://admin_panel:admin_panel_password@localhost:5432/admin_panel?schema=test
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run prisma:generate --workspace apps/api
+
+      - name: Run lint check
+        run: npm run lint
+
+      - name: Run typecheck
+        run: npm run typecheck
+
+      - name: Run API tests
+        run: npm test --workspace apps/api
+
+      - name: Run web tests
+        run: npm test --workspace apps/web
+
+      - name: Build applications
+        run: npm run build
+
+      - name: Validate Docker Compose configuration
+        run: docker compose config
